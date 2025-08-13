@@ -54,7 +54,10 @@ class GenCLI {
             const statusIcon = status.status === 'ready' ? '✅' :
                 status.status === 'not_authenticated' ? '⚠️' : '❌';
 
-            console.log(`  ${statusIcon} ${provider.name}${current} - ${status.status}`);
+            const statusText = status.status === 'error' && status.message ? 
+                `${status.status} (${status.message})` : status.status;
+            
+            console.log(`  ${statusIcon} ${provider.name}${current} - ${statusText}`);
         }
 
         if (!this.config.getProvider()) {

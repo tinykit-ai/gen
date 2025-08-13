@@ -1,6 +1,12 @@
 const { execSync } = require('child_process');
 const BaseProvider = require('./base-provider');
 
+const execConfig = {
+    encoding: 'utf8',
+    timeout: 5000,
+    stdio: ['pipe', 'pipe', 'ignore'] // Ignore stderr to suppress MCP errors
+};
+
 class GHProvider extends BaseProvider {
     constructor() {
         super();
@@ -10,23 +16,30 @@ class GHProvider extends BaseProvider {
 
     async isInstalled() {
         try {
-            const output = execSync('gh --version', { encoding: 'utf8', timeout: 5000 });
+            const output = execSync('gh --version', execConfig);
             const versionMatch = output.match(/gh version (\d+\.\d+\.\d+)/);
             
             if (!versionMatch) {
-                return false;
+                throw new Error('GitHub CLI found but version could not be determined');
             }
 
             const version = versionMatch[1];
-            return this.compareVersions(version, this.minVersion) >= 0;
+            if (this.compareVersions(version, this.minVersion) < 0) {
+                throw new Error(`Version ${version} is less than required ${this.minVersion}`);
+            }
+            
+            return true;
         } catch (error) {
-            return false;
+            if (error.status === 127 || error.message.includes('command not found')) {
+                return false; // Not installed
+            }
+            throw error; // Version or other issues
         }
     }
 
     async isAuthenticated() {
         try {
-            const output = execSync('gh auth status', { encoding: 'utf8', timeout: 5000, stderr: 'inherit' });
+            const output = execSync('gh auth status', execConfig);
             return output.includes('Logged in to github.com');
         } catch (error) {
             return false;
@@ -43,9 +56,8 @@ class GHProvider extends BaseProvider {
         try {
             // Send "exit" to exit quickly without polluting clipboard
             const output = execSync(`echo "exit" | gh copilot suggest -t shell "${fullPrompt}"`, { 
-                encoding: 'utf8', 
+                ...execConfig,
                 timeout: 30000,
-                stdio: ['pipe', 'pipe', 'pipe']
             });
             
             return this.extractCommand(output);

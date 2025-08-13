@@ -32,16 +32,20 @@ class BaseProvider {
      * Get status of provider (installed, authenticated, etc.)
      */
     async getStatus() {
-        const installed = await this.isInstalled();
-        if (!installed) {
-            return { status: 'not_installed', provider: this.name };
-        }
+        try {
+            const installed = await this.isInstalled();
+            if (!installed) {
+                return { status: 'not_installed', provider: this.name };
+            }
 
-        const authenticated = await this.isAuthenticated();
-        return {
-            status: authenticated ? 'ready' : 'not_authenticated',
-            provider: this.name
-        };
+            const authenticated = await this.isAuthenticated();
+            return {
+                status: authenticated ? 'ready' : 'not_authenticated',
+                provider: this.name
+            };
+        } catch (error) {
+            return { status: 'error', provider: this.name, message: error.message };
+        }
     }
 }
 
