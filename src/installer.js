@@ -10,7 +10,7 @@ class Installer {
         this.homeDir = os.homedir();
         this.zshrcPath = path.join(this.homeDir, '.zshrc');
         this.packageDir = __dirname;
-        this.functionsFile = path.join(this.packageDir, 'zshrc_functions.zsh');
+        this.functionsFile = path.join(this.packageDir, '..', 'zshrc_functions.zsh');
     }
 
     getImportScriptsContent(globalFunctionsPath) {
