@@ -1,12 +1,34 @@
 {
-  "name": "gen",
+  "name": "@tinycode/gen",
   "version": "1.0.0",
-  "description": "",
+  "description": "Generate bash commands from natural language using existing AI tools (GitHub Copilot CLI, Gemini CLI)",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "bin": {
+    "gen": "./src/index.js"
   },
-  "keywords": [],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node scripts/install.js",
+    "configure": "node scripts/install.js"
+  },
+  "keywords": [
+    "bash",
+    "shell",
+    "ai",
+    "copilot",
+    "gemini",
+    "cli",
+    "command-generation",
+    "natural-language"
+  ],
   "author": "",
-  "license": "ISC"
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "preferGlobal": true,
+  "os": [
+    "darwin",
+    "linux"
+  ]
 }

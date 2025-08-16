@@ -3,14 +3,22 @@
 const GHProvider = require('./providers/gh-provider');
 const GeminiProvider = require('./providers/gemini-provider');
 const Config = require('./config');
+const Installer = require('./configure');
 
 class GenCLI {
     constructor() {
+        this.installer = new Installer();
         this.config = new Config();
         this.providers = [
             new GHProvider(),
             new GeminiProvider()
         ];
+    }
+
+    configure() {
+        this.installer.install().catch(err => {
+            console.error('Failed to configure Gen:', err);
+        });
     }
 
     async findAvailableProvider() {
@@ -55,8 +63,8 @@ class GenCLI {
     }
 
     async generateCommand(query, context = '', oneTimeProvider = null) {
-        const provider = oneTimeProvider ? 
-            await this.findSpecificProvider(oneTimeProvider) : 
+        const provider = oneTimeProvider ?
+            await this.findSpecificProvider(oneTimeProvider) :
             await this.findAvailableProvider();
         return await provider.generateCommand(query, context);
     }
@@ -70,9 +78,9 @@ class GenCLI {
             const statusIcon = status.status === 'ready' ? '✅' :
                 status.status === 'not_authenticated' ? '⚠️' : '❌';
 
-            const statusText = status.status === 'error' && status.message ? 
+            const statusText = status.status === 'error' && status.message ?
                 `${status.status} (${status.message})` : status.status;
-            
+
             console.log(`  ${statusIcon} ${provider.name}${current} - ${statusText}`);
         }
 
@@ -108,7 +116,8 @@ function parseArgs() {
         provider: null,
         oneTimeProvider: null, // For -p option
         listProviders: false,
-        setProvider: null
+        setProvider: null,
+        configure: false
     };
 
     for (let i = 0; i < args.length; i++) {
@@ -145,6 +154,8 @@ function parseArgs() {
                     i += 2;
                 }
                 break;
+            case "configure":
+                options.configure = true;
         }
     }
 
@@ -190,6 +201,11 @@ async function main() {
     const cli = new GenCLI();
 
     try {
+        if (options.configure) {
+            cli.configure();
+            return;
+        }
+
         if (options.listProviders) {
             await cli.listProviders();
             return;
@@ -200,6 +216,7 @@ async function main() {
             return;
         }
 
+        // should be last
         if (!options.message) {
             showHelp();
             process.exit(1);
