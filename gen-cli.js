@@ -40,8 +40,24 @@ class GenCLI {
         throw new Error(`No available providers found. Please install and authenticate any of the following:\n- ${this.providers.map(p => p.name).join('\n- ')}`);
     }
 
-    async generateCommand(query, context = '') {
-        const provider = await this.findAvailableProvider();
+    async findSpecificProvider(providerName) {
+        const provider = this.providers.find(p => p.name === providerName);
+        if (!provider) {
+            throw new Error(`Provider '${providerName}' not found. Available: ${this.providers.map(p => p.name).join(', ')}`);
+        }
+
+        const status = await provider.getStatus();
+        if (status.status !== 'ready') {
+            throw new Error(`Provider '${providerName}' is ${status.status}${status.message ? ': ' + status.message : ''}`);
+        }
+
+        return provider;
+    }
+
+    async generateCommand(query, context = '', oneTimeProvider = null) {
+        const provider = oneTimeProvider ? 
+            await this.findSpecificProvider(oneTimeProvider) : 
+            await this.findAvailableProvider();
         return await provider.generateCommand(query, context);
     }
 
@@ -90,6 +106,7 @@ function parseArgs() {
         context: '', // For future context implementation
         help: false,
         provider: null,
+        oneTimeProvider: null, // For -p option
         listProviders: false,
         setProvider: null
     };
@@ -108,6 +125,11 @@ function parseArgs() {
             case '--context':
                 // Placeholder for future context implementation
                 options.context = next;
+                i++;
+                break;
+            case '-p':
+            case '--provider':
+                options.oneTimeProvider = next;
                 i++;
                 break;
             case '-h':
@@ -134,24 +156,26 @@ function showHelp() {
 Gen CLI - Generate bash commands from natural language using AI
 
 Usage: 
-  node gen-cli.js -m "your message here"
-  node gen-cli.js provider -list
-  node gen-cli.js provider -set <provider>
+  gen -m "your message here"
+  gen -m "your message here" -p <provider>
+  gen provider -list
+  gen provider -set <provider>
 
 Options:
   -m, --message <text>    Natural language description (required)
+  -p, --provider <name>   Use specific provider for this command (gh, gemini)
   -c, --context <num>     Context from previous commands (future feature)
-  -h, --help             Show this help message
+  -h, --help              Show this help message
 
 Provider Commands:
-  provider -list         List all available providers and their status
-  provider -set <name>   Set preferred provider (gh, gemini, auto)
+  provider -list          List all available providers and their status
+  provider -set <name>    Set preferred provider (gh, gemini, auto)
 
 Examples:
-  node gen-cli.js -m "List all directories in current folder"
-  node gen-cli.js -m "Find files larger than 100MB"
-  node gen-cli.js provider -list
-  node gen-cli.js provider -set gh
+  gen -m "List all directories in current folder"
+  gen -m "Find files larger than 100MB" -p gemini
+  gen provider -list
+  gen provider -set gh
 `);
 }
 
@@ -181,7 +205,7 @@ async function main() {
             process.exit(1);
         }
 
-        const command = await cli.generateCommand(options.message, options.context);
+        const command = await cli.generateCommand(options.message, options.context, options.oneTimeProvider);
         console.log(command);
 
     } catch (error) {

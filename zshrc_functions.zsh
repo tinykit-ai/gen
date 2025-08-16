@@ -1,5 +1,4 @@
-# Add this to your ~/.zshrc file for the best experience
-
+# GEN_CONFIG_START
 # Function that generates command and puts it in your input line
 gen() {
     # Check if --help was requested or provider commands
@@ -38,3 +37,4 @@ gen_copy() {
         echo "$cmd_output"
     fi
 }
+# GEN_CONFIG_END

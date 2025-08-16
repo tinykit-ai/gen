@@ -58,7 +58,7 @@ class GeminiProvider extends BaseProvider {
 
         try {
             const output = execSync(`gemini -p "${fullPrompt}"`, {
-                encoding: 'utf8',
+                ...execConfig,
                 timeout: 30000
             });
 
