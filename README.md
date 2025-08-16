@@ -1,4 +1,4 @@
-# Gen
+# tinykit/gen
 
 ⚠️ **For experienced developers only** ⚠️
 
@@ -14,7 +14,7 @@ Generate bash commands from natural language using your existing AI tools. Comma
 ## Installation
 
 ```bash
-npm install -g gen
+npm install -g @tinykit/gen
 ```
 
 During installation, you'll be prompted to add a source line to your `~/.zshrc` that loads the gen functions from the global package.
@@ -65,15 +65,6 @@ gen provider -list
 gen provider -set gh
 ```
 
-### Alternative Functions
-```bash
-# Show command without putting it in input line
-gen_show -m "backup database"
-
-# Copy command to clipboard
-gen_copy -m "restart nginx"
-```
-
 ## Examples
 
 ```bash
@@ -122,7 +113,7 @@ This tool is **intentionally dangerous**:
 
 ## Configuration
 
-Config file: `.gen-config` (created in current directory)
+Config file: `~/.tinykit/gen-config` (created in home directory)
 
 ```json
 {
@@ -158,7 +149,7 @@ Contributions welcome! This tool follows YAGNI principles - keep it simple.
 
 1. Create provider class extending `BaseProvider`
 2. Implement `isInstalled()`, `isAuthenticated()`, `generateCommand()`
-3. Add to provider list in `index.js`
+3. Add to provider list in `src/index.js`
 
 ## License
 

@@ -10,7 +10,7 @@
 2. **Test installation locally**:
 ```bash
 npm pack
-npm install -g ./gen-1.0.0.tgz
+npm install -g ./tinykit-gen-1.0.0.tgz
 gen --help
 ```3. **Publish to npm**:
    ```bash
@@ -35,25 +35,10 @@ npm version major && npm publish
 
 ```bash
 # After publishing
-npm install -g gen
+npm install -g @tinykit/gen
 
 # Test
 gen --help
 gen provider -list
 gen -m "test command"
-```
-
-## Package name
-
-Current name: `gen`
-
-Alternative names if taken:
-- `gen-ai`
-- `ai-gen`
-- `shell-gen`
-- `bash-gen`
-
-Check availability:
-```bash
-npm info gen
 ```

@@ -4,5 +4,3 @@
 .history
 node_modules
 *.log
-.gen-config
-index.js

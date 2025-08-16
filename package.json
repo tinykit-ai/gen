@@ -1,13 +1,13 @@
 {
-  "name": "@tinycode/gen",
-  "version": "1.0.0",
+  "name": "@tinykit/gen",
+  "version": "0.0.1",
+  "private": false,
   "description": "Generate bash commands from natural language using existing AI tools (GitHub Copilot CLI, Gemini CLI)",
-  "main": "index.js",
+  "main": "./src/index.js",
   "bin": {
-    "gen": "./src/index.js"
+    "gen": "src/index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "node scripts/install.js",
     "configure": "node scripts/install.js"
   },
@@ -30,5 +30,8 @@
   "os": [
     "darwin",
     "linux"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -1,9 +1,11 @@
+const os = require('os');
 const fs = require('fs');
 const path = require('path');
 
 class Config {
     constructor() {
-        this.configPath = path.join(process.cwd(), '.gen-config');
+        this.homeDir = os.homedir();
+        this.configPath = path.join(this.homeDir, '.tinykit/gen-config');
         this.config = this.loadConfig();
     }
 
@@ -24,7 +26,9 @@ class Config {
     }
 
     saveConfig() {
+        // create a directory if it doesn't exist
         try {
+            fs.mkdirSync(path.dirname(this.configPath), { recursive: true });
             fs.writeFileSync(this.configPath, JSON.stringify(this.config, null, 2));
         } catch (error) {
             throw new Error(`Could not save config: ${error.message}`);

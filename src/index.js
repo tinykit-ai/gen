@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-
 const GHProvider = require('./providers/gh-provider');
 const GeminiProvider = require('./providers/gemini-provider');
 const Config = require('./config');
-const Installer = require('./configure');
+const Installer = require('./installer');
 
 class GenCLI {
     constructor() {
