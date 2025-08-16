@@ -4,6 +4,26 @@
 
 Generate bash commands from natural language using your existing AI tools. Commands are generated ready-to-execute - no training wheels.
 
+## Safety Warning
+
+This tool is **dangerous**:
+
+- ❌ No command explanation
+- ❌ No undo functionality
+- ❌ ✅ Commands are one Enter key away from execution
+
+**Perfect for**: 
+- Senior developers
+- Sysadmins
+- Power users who value speed
+- **People who blindly paste commands without understanding them.**
+
+**Terrible for**:
+- Junior developers
+- Learning environments
+- Production servers
+- Your grandma
+
 ## Features
 
 - 🤖 **Uses tools you already have**: GitHub Copilot CLI, Gemini CLI
@@ -17,7 +37,17 @@ Generate bash commands from natural language using your existing AI tools. Comma
 npm install -g @tinykit/gen
 ```
 
-During installation, you'll be prompted to add a source line to your `~/.zshrc` that loads the gen functions from the global package.
+After installation, you can run `gen init` to add a source line to your `~/.zshrc` that loads the gen functions from the global package.
+
+```bash
+gen init
+```
+
+You will then need to restart the terminal or source the `~/.zshrc` file.
+
+```bash
+source ~/.zshrc
+```
 
 ## Prerequisites
 
@@ -83,19 +113,6 @@ gen -m "kill all processes on port 3000"
 gen -m "find all TODO comments in JavaScript files"
 gen -m "count lines of code by file type"
 ```
-
-## Safety Warning
-
-This tool is **intentionally dangerous**:
-
-- ❌ No confirmation prompts
-- ❌ No command explanation
-- ❌ No undo functionality
-- ✅ Commands are ready to execute immediately
-
-**Perfect for**: Senior developers, sysadmins, power users who value speed
-
-**Terrible for**: Junior developers, learning environments, production servers
 
 ## How it Works
 
